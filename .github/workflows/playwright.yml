@@ -1,0 +1,79 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:  # 手動トリガー用
+
+jobs:
+  test:
+    name: 'Playwright Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      
+      - name: Run Playwright tests
+        run: npx playwright test --project=${{ matrix.browser }}
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 30
+
+  report:
+    name: 'Generate Test Report'
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download all test results
+        uses: actions/download-artifact@v3
+        with:
+          path: all-playwright-reports
+      
+      - name: Merge test reports
+        run: |
+          npm ci
+          npx playwright merge-reports ./all-playwright-reports/*
+      
+      - name: Upload merged report
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-merged-report
+          path: playwright-report/
+          retention-days: 30
+      
+      - name: Publish Test Report
+        if: always()
+        uses: mikepenz/action-junit-report@v3
+        with:
+          report_paths: 'all-playwright-reports/**/junit-*.xml'
+          check_name: 'Playwright Test Report'
+          fail_on_failure: false

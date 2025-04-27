@@ -4,7 +4,7 @@
 
 ## 概要
 
-2種類のデプロイ先に対応したワークフローが用意されています：
+以下の種類のワークフローが用意されています：
 
 1. **AWS デプロイ** (`workflows/aws-deploy.yml`)
    - AWS S3、CloudFront、ECR、ECSなどへのデプロイをサポート
@@ -13,6 +13,11 @@
 2. **Vercel デプロイ** (`workflows/vercel-deploy.yml`)
    - Vercelへのデプロイをサポート
    - プルリクエスト時のプレビューデプロイと本番デプロイに対応
+
+3. **Playwright テスト** (`workflows/playwright.yml`)
+   - 複数のブラウザ（Chromium、Firefox、WebKit）での自動E2Eテスト
+   - テスト結果のレポート生成と保存
+   - マトリックスビルドによる並列テスト実行
 
 ## 設定方法
 

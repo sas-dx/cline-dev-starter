@@ -18,7 +18,8 @@ cline-dev-starter/
 │   ├── GITHUB_ACTIONS.md         # GitHub Actions設定の説明
 │   └── workflows/                # GitHub Actionsワークフロー
 │       ├── aws-deploy.yml        # AWS用デプロイワークフロー
-│       └── vercel-deploy.yml     # Vercel用デプロイワークフロー
+│       ├── vercel-deploy.yml     # Vercel用デプロイワークフロー
+│       └── playwright.yml        # Playwrightテスト用ワークフロー
 ├── mcp/                          # MCP (Model Context Protocol) サーバー
 │   └── github-server/            # GitHub API用MCPサーバー
 │       ├── src/                  # ソースコード
@@ -28,6 +29,11 @@ cline-dev-starter/
 │       ├── package.json          # 依存関係の定義
 │       ├── tsconfig.json         # TypeScript設定
 │       └── .env.example          # 環境変数の設定例
+├── tests/                        # Playwrightテスト
+│   ├── PLAYWRIGHT_GUIDE.md       # Playwrightの使用ガイド
+│   ├── example.spec.ts           # サンプルテスト
+│   └── global-setup.ts           # テスト実行前の設定
+├── playwright.config.ts          # Playwright設定ファイル
 └── README.md                     # このファイル
 ```
 
@@ -108,12 +114,27 @@ cline-dev-starter/
 
 ## CI/CD ワークフロー
 
-`.github/workflows` ディレクトリには、継続的インテグレーション/継続的デリバリー（CI/CD）のためのGitHub Actionsワークフローが含まれています。以下の2種類のデプロイ先に対応しています：
+`.github/workflows` ディレクトリには、継続的インテグレーション/継続的デリバリー（CI/CD）のためのGitHub Actionsワークフローが含まれています。以下の種類のワークフローが用意されています：
 
 1. **AWS デプロイ** - S3、CloudFront、ECR、ECSなどへのデプロイをサポート
 2. **Vercel デプロイ** - Vercelへのデプロイとプレビュー環境の自動作成をサポート
+3. **Playwright テスト** - 複数のブラウザでの自動E2Eテストを実行
 
 これらのワークフローは、コードの品質を確保し、デプロイプロセスを自動化するために設計されています。設定方法や詳細については、[GitHub設定の説明](./.github/GITHUB_ACTIONS.md)を参照してください。
+
+## E2E テスト
+
+`tests` ディレクトリには、[Playwright](https://playwright.dev/)を使用したE2Eテストが含まれています。これらのテストは、アプリケーションが実際のブラウザで正しく動作することを確認するために使用されます。
+
+主な特徴：
+
+- 複数のブラウザ（Chromium、Firefox、WebKit）でのテスト実行
+- モバイルビューポートのエミュレーション
+- APIテストのサポート
+- テストレポートの自動生成
+- GitHub Actionsとの統合
+
+テストの実行方法や詳細については、[Playwrightガイド](./tests/PLAYWRIGHT_GUIDE.md)を参照してください。
 
 ## 使用方法
 
