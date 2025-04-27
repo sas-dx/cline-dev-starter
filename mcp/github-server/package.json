@@ -1,0 +1,23 @@
+{
+  "name": "github-server",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "GitHub API用MCPサーバー",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "@octokit/rest": "^20.0.2",
+    "@types/node": "^22.14.1",
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
