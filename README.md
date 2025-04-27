@@ -15,7 +15,7 @@ cline-dev-starter/
 │   ├── code-quality-rules.md     # コード品質に関するルール
 │   └── architecture-rules.md     # アーキテクチャに関するルール
 ├── .github/                      # GitHub関連の設定
-│   ├── README.md                 # GitHub設定の説明
+│   ├── GITHUB_ACTIONS.md         # GitHub Actions設定の説明
 │   └── workflows/                # GitHub Actionsワークフロー
 │       ├── aws-deploy.yml        # AWS用デプロイワークフロー
 │       └── vercel-deploy.yml     # Vercel用デプロイワークフロー
@@ -113,7 +113,7 @@ cline-dev-starter/
 1. **AWS デプロイ** - S3、CloudFront、ECR、ECSなどへのデプロイをサポート
 2. **Vercel デプロイ** - Vercelへのデプロイとプレビュー環境の自動作成をサポート
 
-これらのワークフローは、コードの品質を確保し、デプロイプロセスを自動化するために設計されています。設定方法や詳細については、[GitHub設定の説明](./.github/README.md)を参照してください。
+これらのワークフローは、コードの品質を確保し、デプロイプロセスを自動化するために設計されています。設定方法や詳細については、[GitHub設定の説明](./.github/GITHUB_ACTIONS.md)を参照してください。
 
 ## 使用方法
 

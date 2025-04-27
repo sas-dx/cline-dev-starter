@@ -1,0 +1,13 @@
+[33mcommit a228e9894252b41ba49e1bd8730088006c862d39[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: User <user@example.com>
+Date:   Sun Apr 27 09:16:35 2025 +0900
+
+    🚀 feat: GitHub MCPサーバーを追加
+    
+    GitHub APIを活用するためのMCPサーバーを追加しました。
+    - リポジトリ情報の取得
+    - イシューの作成と一覧取得
+    - プルリクエストの作成と一覧取得
+    などの機能を提供します。
+    
+    READMEを更新し、MCPサーバーのセットアップと使用方法を追加しました。
