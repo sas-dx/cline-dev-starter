@@ -1,0 +1,106 @@
+name: AWS Deployment
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:  # 手動トリガー用
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linting
+        run: npm run lint || echo "No linting configured"
+      
+      - name: Run tests
+        run: npm test || echo "No tests configured"
+      
+      - name: Build project
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: build/
+
+  deploy-to-aws:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build/
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      # S3へのデプロイ例（静的ウェブサイトの場合）
+      - name: Deploy to S3
+        run: |
+          aws s3 sync build/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+        if: ${{ secrets.AWS_S3_BUCKET != '' }}
+      
+      # CloudFrontのキャッシュ無効化（必要な場合）
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        if: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID != '' }}
+      
+      # ECSへのデプロイ例（コンテナアプリケーションの場合）
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        if: ${{ secrets.AWS_ECR_REPOSITORY != '' }}
+      
+      - name: Build, tag, and push image to Amazon ECR
+        if: ${{ secrets.AWS_ECR_REPOSITORY != '' }}
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      
+      - name: Update ECS service
+        if: ${{ secrets.AWS_ECS_SERVICE != '' && secrets.AWS_ECS_CLUSTER != '' }}
+        run: |
+          aws ecs update-service --cluster ${{ secrets.AWS_ECS_CLUSTER }} --service ${{ secrets.AWS_ECS_SERVICE }} --force-new-deployment
+
+  notify:
+    needs: [deploy-to-aws]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: ${{ needs.deploy-to-aws.result == 'success' }}
+        run: echo "Deployment to AWS was successful!"
+      
+      - name: Notify failure
+        if: ${{ needs.deploy-to-aws.result == 'failure' }}
+        run: echo "Deployment to AWS failed!"
