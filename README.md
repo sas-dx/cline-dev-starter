@@ -23,6 +23,11 @@ cline-dev-starter/
 │       ├── aws-deploy.yml        # AWS用デプロイワークフロー
 │       ├── vercel-deploy.yml     # Vercel用デプロイワークフロー
 │       └── playwright.yml        # Playwrightテスト用ワークフロー
+├── docker/                       # Docker関連ファイル
+│   ├── dev/                      # 開発環境用Docker設定
+│   │   └── Dockerfile            # 開発環境用Dockerfile
+│   └── prod/                     # 本番環境用Docker設定
+│       └── Dockerfile            # 本番環境用Dockerfile
 ├── mcp/                          # MCP (Model Context Protocol) サーバー
 │   └── github-server/            # GitHub API用MCPサーバー
 │       ├── src/                  # ソースコード
@@ -40,7 +45,92 @@ cline-dev-starter/
 │   ├── plan_custominstructions.md # PLANモード用のカスタムインストラクション
 │   └── act_customInstructions.md # ACTモード用のカスタムインストラクション
 ├── playwright.config.ts          # Playwright設定ファイル
+├── Dockerfile                    # メインのDockerfile
+├── docker-compose.yml            # Docker Compose設定ファイル
+├── .dockerignore                 # Dockerビルド時に除外するファイル
 └── README.md                     # このファイル
+```
+
+## Docker連携
+
+このリポジトリには、アプリケーション開発のためのDocker環境が含まれています。開発環境と本番環境の両方に対応したDockerfileと、複数のサービスを連携させるためのDocker Compose設定が用意されています。
+
+### Dockerファイルの説明
+
+#### メインDockerfile
+
+`Dockerfile`は、Node.jsアプリケーションをコンテナ化するための基本設定を提供します：
+
+- Node.js 18 Alpine イメージをベースに使用
+- アプリケーションの依存関係をインストール
+- アプリケーションコードをコンテナにコピー
+- ポート3000を公開
+- `npm start`コマンドでアプリケーションを起動
+
+#### 開発環境用Dockerfile
+
+`docker/dev/Dockerfile`は、開発中に使用するための設定を提供します：
+
+- ホットリロード対応（コード変更時に自動再起動）
+- 開発環境用の環境変数設定
+- `npm run dev`コマンドでアプリケーションを起動
+
+#### 本番環境用Dockerfile
+
+`docker/prod/Dockerfile`は、本番環境にデプロイするための最適化された設定を提供します：
+
+- マルチステージビルドによる軽量イメージの作成
+- 本番環境用の環境変数設定
+- 必要なファイルのみをコンテナに含める最適化
+- `npm run start:prod`コマンドでアプリケーションを起動
+
+#### Docker Compose設定
+
+`docker-compose.yml`は、アプリケーションとデータベース（PostgreSQL）を連携させるための設定を提供します：
+
+- アプリケーションサービス（開発環境用Dockerfileを使用）
+- PostgreSQLデータベースサービス
+- ボリュームによるデータ永続化
+- ネットワーク設定
+- 環境変数の設定
+
+#### .dockerignore
+
+`.dockerignore`ファイルは、Dockerイメージビルド時に不要なファイルをコピーしないようにするための設定です：
+
+- バージョン管理システムのファイル
+- ノードモジュール
+- 環境設定ファイル
+- ビルド成果物
+- エディタ設定
+- その他の不要なファイル
+
+### 使用方法
+
+#### 開発環境での起動
+
+開発環境では、Docker Composeを使用してアプリケーションとデータベースを起動します：
+
+```bash
+docker-compose up
+```
+
+これにより、以下のサービスが起動します：
+- アプリケーション（http://localhost:3000）
+- PostgreSQLデータベース（localhost:5432）
+
+#### 本番環境用ビルドとデプロイ
+
+本番環境用のDockerイメージをビルドするには：
+
+```bash
+docker build -f docker/prod/Dockerfile -t myapp:prod .
+```
+
+本番環境用のコンテナを起動するには：
+
+```bash
+docker run -p 3000:3000 -e NODE_ENV=production myapp:prod
 ```
 
 ## Cline カスタムインストラクション
