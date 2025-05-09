@@ -10,10 +10,13 @@ Cline を使用したチーム開発のための環境構築と開発ルール�
 
 ```
 cline-dev-starter/
-├── .clinerules/                  # Cline 開発ルールファイル
-│   ├── team-development-rules.md # チーム開発に関するルール
-│   ├── code-quality-rules.md     # コード品質に関するルール
-│   └── architecture-rules.md     # アーキテクチャに関するルール
+├── .clinerules/                      # Cline 開発ルールファイル
+│   ├── team-development-rules.md     # チーム開発に関するルール
+│   ├── code-quality-rules.md         # コード品質に関するルール
+│   ├── architecture-rules.md         # アーキテクチャに関するルール
+│   ├── git-operation-rules.md        # Git操作に関するルール
+│   ├── mcp-usage-rules.md            # MCPサーバー利用に関するルール
+│   └── tech-stack-selection-rules.md # 技術スタック選定に関するルール
 ├── .github/                      # GitHub関連の設定
 │   ├── GITHUB_ACTIONS.md         # GitHub Actions設定の説明
 │   └── workflows/                # GitHub Actionsワークフロー
@@ -109,6 +112,46 @@ cline-dev-starter/
 - マイクロサービスアーキテクチャ（該当する場合）
 - セキュリティアーキテクチャ
 - パフォーマンスとスケーラビリティ
+
+### Git操作ルール
+
+[git-operation-rules.md](./.clinerules/git-operation-rules.md) には以下の内容が含まれています：
+
+- 基本原則
+- 日常的なGit操作フロー
+- コンフリクト解決手順
+- リベースとマージの使い分け
+- タグ付けのルール
+- Gitフックの活用
+- 高度なGit操作
+- トラブルシューティング
+- セキュリティ対策
+- Git設定のベストプラクティス
+- チーム開発でのGit活用
+
+### MCPサーバー利用ルール
+
+[mcp-usage-rules.md](./.clinerules/mcp-usage-rules.md) には以下の内容が含まれています：
+
+- MCP (Model Context Protocol) の概要
+- MCPサーバーの設定と管理
+- GitHub MCPサーバーの利用
+- カスタムMCPサーバーの開発
+- セキュリティとプライバシー
+- トラブルシューティング
+- ベストプラクティス
+- 継続的な改善
+
+### 技術スタック選定ルール
+
+[tech-stack-selection-rules.md](./.clinerules/tech-stack-selection-rules.md) には以下の内容が含まれています：
+
+- 基本原則
+- 選定プロセス
+- ドキュメント化
+- 技術スタック変更の管理
+- 技術負債の管理
+- 新技術の評価と導入
 
 ## GitHub MCP サーバー
 
