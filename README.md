@@ -33,9 +33,41 @@ cline-dev-starter/
 │   ├── PLAYWRIGHT_GUIDE.md       # Playwrightの使用ガイド
 │   ├── example.spec.ts           # サンプルテスト
 │   └── global-setup.ts           # テスト実行前の設定
+├── CustomInstructions/           # Cline用カスタムインストラクション
+│   ├── plan_custominstructions.md # PLANモード用のカスタムインストラクション
+│   └── act_customInstructions.md # ACTモード用のカスタムインストラクション
 ├── playwright.config.ts          # Playwright設定ファイル
 └── README.md                     # このファイル
 ```
+
+## Cline カスタムインストラクション
+
+`CustomInstructions` ディレクトリには、Clineのプランモードとアクトモードで使用するためのカスタムインストラクションファイルが含まれています。これらのファイルは、**ご自身のローカル環境のCline内におけるactCustomInstructionsとplanCustomInstructionsに設定（コピペ）する用のファイル**です。
+
+### PLANモード用カスタムインストラクション
+
+[plan_custominstructions.md](./CustomInstructions/plan_custominstructions.md) には、PLANモードでClineを使用する際のガイドラインが含まれています：
+
+- 基本計画原則
+- ドメインモデリングアプローチ
+- アーキテクチャ設計ガイドライン
+- 計画プロセス（要件分析、ドメインモデリング、アーキテクチャ設計、詳細設計、実装計画）
+- コミュニケーションガイドライン
+- 計画ドキュメント形式
+
+### ACTモード用カスタムインストラクション
+
+[act_customInstructions.md](./CustomInstructions/act_customInstructions.md) には、ACTモードでClineを使用する際のガイドラインが含まれています：
+
+- 基本動作原則
+- 最重要ルール（**既存のコードを修正する場合既存のコードを省略しないこと**）
+- コード実装ルール
+- ファイル操作ルール
+- Gitコミットルール
+- コマンド実行ルール
+- テスト実行ルール
+- エラー対応ルール
+- 実行完了報告
 
 ## 開発ルール
 
@@ -142,10 +174,13 @@ cline-dev-starter/
 
 1. このリポジトリをクローンまたはフォークして、新しいプロジェクトの基盤として使用します。
 2. `.clinerules` ディレクトリ内のルールを確認し、必要に応じてプロジェクトの要件に合わせて調整します。
-3. チームメンバー全員がこれらのルールを理解し、遵守するようにします。
-4. 必要に応じて GitHub MCP サーバーをセットアップし、Cline から GitHub API を活用します。
-5. CI/CDワークフローを設定し、自動テストとデプロイを有効にします。
-6. Cline を使用して開発を進める際に、これらのルールに基づいてコードの品質とアーキテクチャの一貫性を維持します。
+3. `CustomInstructions` ディレクトリ内のファイルをClineのカスタムインストラクション設定にコピーします：
+   - `plan_custominstructions.md` の内容をClineのPLANモード用カスタムインストラクションにコピー
+   - `act_customInstructions.md` の内容をClineのACTモード用カスタムインストラクションにコピー
+4. チームメンバー全員がこれらのルールを理解し、遵守するようにします。
+5. 必要に応じて GitHub MCP サーバーをセットアップし、Cline から GitHub API を活用します。
+6. CI/CDワークフローを設定し、自動テストとデプロイを有効にします。
+7. Cline を使用して開発を進める際に、これらのルールに基づいてコードの品質とアーキテクチャの一貫性を維持します。
 
 ## Cline との連携
 
