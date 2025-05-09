@@ -1,0 +1,43 @@
+# バージョン管理システム
+.git
+.gitignore
+.gitattributes
+
+# ノードモジュール
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 環境設定ファイル
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# ビルド成果物
+dist
+build
+coverage
+
+# エディタ設定
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# Docker関連
+Dockerfile
+docker-compose.yml
+.dockerignore
+docker/
+
+# その他
+README.md
+LICENSE
+*.md
