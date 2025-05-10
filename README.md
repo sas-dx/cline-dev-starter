@@ -1,322 +1,162 @@
-# Cline 開発スターターキット
+# Cline スタートアップ環境
 
-Cline を使用したチーム開発のための環境構築と開発ルールを提供するリポジトリです。
+Clineを活用した開発をすぐに始められる統合スターターキットです。このリポジトリは、Clineの能力を最大限に引き出すための環境設定、開発ルール、拡張機能を提供します。
 
-## 概要
+## Clineスタートアップ環境の特徴
 
-このリポジトリは、Cline を活用したチーム開発を効率的に行うための基盤を提供します。開発ルール、コード品質基準、アーキテクチャガイドラインなどを含み、チームメンバー全員が一貫した方法で開発を進められるようサポートします。また、GitHub MCPサーバーを含み、Clineの機能を拡張してGitHub APIを活用できるようにします。さらに、CI/CD用のGitHub Actionsワークフローも提供しています。
+- **即時開発可能**: 必要な設定が揃っており、クローン後すぐに開発を開始できます
+- **Cline最適化**: Clineの能力を最大限に活用するための各種設定を含みます
+- **拡張性**: MCPサーバーやGitHub Actions連携など、拡張機能を簡単に追加できます
+- **チーム開発対応**: 一貫した開発プロセスを実現するためのルールとガイドラインを提供します
+- **ベストプラクティス**: Clineを活用した開発のベストプラクティスを組み込んでいます
+
+## クイックスタート
+
+1. リポジトリをクローン: `git clone https://github.com/sas-dx/cline-dev-starter.git`
+2. カスタムインストラクションを設定: `CustomInstructions`フォルダ内のファイルをClineの設定にコピー
+3. メモリバンクを初期化: Clineに「initialize memory bank」と指示
+4. 開発を開始: Clineと対話しながら開発を進める
+
+## Clineの拡張機能
+
+このスターターキットには、Clineの能力を拡張するための様々な機能が含まれています。
+
+### メモリバンク
+
+Clineはセッション間でメモリがリセットされるため、`memory-bank`ディレクトリを通じてプロジェクトの状態を継続的に把握します。
+
+- **主要ファイル**: projectbrief.md（基本情報）、activeContext.md（現在の作業）、progress.md（進捗状況）など
+- **初期化方法**: Clineに「initialize memory bank」と指示するだけで自動作成
+- **更新方法**: 「update memory bank」と指示することで最新状態に更新
+- **活用例**: プロジェクト状態の把握、知識の継続性確保、チーム内共有、意思決定の記録
+
+### .clinerules（開発ルール）
+
+`.clinerules`ディレクトリには、Clineが理解して適用できる開発ルールが含まれています。
+
+- **チーム開発ルール**: Gitワークフロー、コードレビュープロセス、コミュニケーション方法
+- **コード品質ルール**: 命名規則、コード構造、エラー処理、テスト戦略
+- **アーキテクチャルール**: レイヤード構造、フロントエンド/バックエンド設計、セキュリティ
+- **Git操作ルール**: コミット規約、ブランチ戦略、コンフリクト解決
+- **MCPサーバー利用ルール**: サーバーの設定、セキュリティ、ベストプラクティス
+- **技術スタック選定ルール**: 選定プロセス、評価基準、ドキュメント化
+
+### カスタムインストラクション
+
+Clineの動作をプロジェクトに最適化するためのカスタムインストラクションを提供します。
+
+- **PLANモード用**: 計画立案、アーキテクチャ設計、要件分析のためのガイドライン
+- **ACTモード用**: コード実装、ファイル操作、Git操作のためのルール
 
 ## ディレクトリ構成
 
 ```
 cline-dev-starter/
-├── .clinerules/                      # Cline 開発ルールファイル
-│   ├── team-development-rules.md     # チーム開発に関するルール
-│   ├── code-quality-rules.md         # コード品質に関するルール
-│   ├── architecture-rules.md         # アーキテクチャに関するルール
-│   ├── git-operation-rules.md        # Git操作に関するルール
-│   ├── mcp-usage-rules.md            # MCPサーバー利用に関するルール
-│   └── tech-stack-selection-rules.md # 技術スタック選定に関するルール
-├── .github/                      # GitHub関連の設定
-│   ├── GITHUB_ACTIONS.md         # GitHub Actions設定の説明
-│   └── workflows/                # GitHub Actionsワークフロー
-│       ├── aws-deploy.yml        # AWS用デプロイワークフロー
-│       ├── vercel-deploy.yml     # Vercel用デプロイワークフロー
-│       └── playwright.yml        # Playwrightテスト用ワークフロー
-├── docker/                       # Docker関連ファイル
-│   ├── dev/                      # 開発環境用Docker設定
-│   │   └── Dockerfile            # 開発環境用Dockerfile
-│   └── prod/                     # 本番環境用Docker設定
-│       └── Dockerfile            # 本番環境用Dockerfile
-├── mcp/                          # MCP (Model Context Protocol) サーバー
+├── .clinerules/                  # Cline開発ルール
+├── .github/                      # GitHub Actions設定
+├── CustomInstructions/           # Clineカスタムインストラクション
+├── docker/                       # Docker環境設定
+├── mcp/                          # MCPサーバー
 │   └── github-server/            # GitHub API用MCPサーバー
-│       ├── src/                  # ソースコード
-│       ├── API_RATE_LIMIT_GUIDE.md # APIレート制限の解消方法
-│       ├── GITHUB_TOKEN_GUIDE.md # GitHubトークンの取得方法
-│       ├── README.md             # GitHub MCPサーバーの説明
-│       ├── package.json          # 依存関係の定義
-│       ├── tsconfig.json         # TypeScript設定
-│       └── .env.example          # 環境変数の設定例
+├── memory-bank/                  # Clineメモリバンク
+├── src/                          # ソースコード
 ├── tests/                        # Playwrightテスト
-│   ├── PLAYWRIGHT_GUIDE.md       # Playwrightの使用ガイド
-│   ├── example.spec.ts           # サンプルテスト
-│   └── global-setup.ts           # テスト実行前の設定
-├── CustomInstructions/           # Cline用カスタムインストラクション
-│   ├── plan_custominstructions.md # PLANモード用のカスタムインストラクション
-│   └── act_customInstructions.md # ACTモード用のカスタムインストラクション
-├── memory-bank/                  # Clineのメモリバンク
-│   ├── projectbrief.md           # プロジェクトの基本情報
-│   ├── productContext.md         # プロジェクトの目的と問題解決
-│   ├── systemPatterns.md         # システムアーキテクチャ
-│   ├── techContext.md            # 使用技術
-│   ├── activeContext.md          # 現在の作業フォーカス
-│   └── progress.md               # 進捗状況
-├── playwright.config.ts          # Playwright設定ファイル
-├── Dockerfile                    # メインのDockerfile
-├── docker-compose.yml            # Docker Compose設定ファイル
-├── .dockerignore                 # Dockerビルド時に除外するファイル
+├── Dockerfile                    # メインDockerfile
+├── docker-compose.yml            # Docker Compose設定
 └── README.md                     # このファイル
 ```
 
-## メモリバンク
+### 主要ファイルの説明
 
-`memory-bank` ディレクトリには、Clineがプロジェクトの状態を理解し、効果的に作業を進めるための重要な情報が含まれています。Clineはセッション間でメモリがリセットされるため、このメモリバンクを通じてプロジェクトの状態を把握します。
+- **カスタムインストラクション**: `plan_custominstructions.md`（計画用）、`act_customInstructions.md`（実行用）
+- **メモリバンク**: `projectbrief.md`（概要）、`activeContext.md`（現状）、`progress.md`（進捗）など
+- **Docker関連**: 開発環境用と本番環境用のDockerfile、データベース連携用docker-compose.yml
+- **テスト**: Playwrightを使用したE2Eテスト（`tests/example.spec.ts`）
 
-### メモリバンクの構成
+## MCPサーバー連携
 
-メモリバンクは以下の6つのコアファイルで構成されています：
+MCP（Model Context Protocol）サーバーを使用することで、Clineの機能を拡張し、外部APIやサービスと連携できます。
 
-1. **projectbrief.md** - プロジェクトの基本情報、目標、制約条件などを記載
-2. **productContext.md** - プロジェクトが解決する問題、ユーザー体験目標、主要機能と特徴を記載
-3. **systemPatterns.md** - システムアーキテクチャ、設計パターン、コンポーネント構成を記載
-4. **techContext.md** - 使用技術、開発環境、依存関係、技術選定理由を記載
-5. **activeContext.md** - 現在の作業フォーカス、最近の変更、重要な決定事項を記載
-6. **progress.md** - 完了した作業、進行中の作業、今後の予定、課題と障害を記載
+### GitHub MCPサーバー
 
-### メモリバンクの初期設定方法
+このスターターキットには、GitHubのAPIを利用するためのMCPサーバーが含まれています。
 
-新しいプロジェクトでメモリバンクを初期化するには：
+- **機能**: リポジトリ情報の取得、イシュー作成/一覧表示、プルリクエスト作成/一覧表示
+- **セットアップ手順**:
+  1. `mcp/github-server/.env.example`を`.env`にコピー
+  2. GitHubトークンを取得して`.env`に設定
+  3. 依存関係をインストール: `npm install`
+  4. ビルド: `npm run build`
+  5. Cline MCPの設定ファイルに追加
 
-1. プロジェクトのルートディレクトリに `memory-bank` ディレクトリを作成します
-2. 上記の6つのコアファイルを作成します
-3. 各ファイルにプロジェクトの情報を記入します
-4. 変更をGitリポジトリにコミットします
+```json
+"github.com/modelcontextprotocol/servers/tree/main/src/github": {
+  "autoApprove": [],
+  "disabled": false,
+  "timeout": 60,
+  "command": "node",
+  "args": [
+    "プロジェクトのパス/mcp/github-server/build/index.js"
+  ],
+  "transportType": "stdio"
+}
+```
 
-簡単な初期化方法として、Clineに「initialize memory bank」と指示することで、基本的なメモリバンク構造を自動的に作成することもできます。
+### 独自MCPサーバーの追加方法
 
-### メモリバンクの更新方法
+独自のMCPサーバーを作成して追加することも可能です。
 
-プロジェクトの進行に伴い、メモリバンクを定期的に更新することが重要です：
+1. MCPサーバーのコードを作成（Node.js推奨）
+2. 必要なツールとリソースを定義
+3. Cline MCPの設定ファイルに追加
+4. 環境変数で認証情報を管理
 
-1. プロジェクトの状態が変わったら、関連するファイルを手動で更新します
-2. 特に `activeContext.md` と `progress.md` は頻繁に更新が必要です
-3. 重要な決定や設計変更があった場合は、関連するファイルを更新します
-4. 更新後は変更をGitリポジトリにコミットします
+詳細は`.clinerules/mcp-usage-rules.md`を参照してください。
 
-Clineに「update memory bank」と指示することで、Clineがすべてのメモリバンクファイルをレビューし、必要な更新を提案することもできます。
+## GitHub Actions連携
 
-### メモリバンクの使用用途
+`.github/workflows`ディレクトリには、CI/CD自動化のためのGitHub Actionsワークフローが含まれています。
 
-メモリバンクは以下のような用途で活用できます：
+### 提供されているワークフロー
 
-- **プロジェクト状態の把握**: Clineがプロジェクトの現状を理解するための情報源
-- **知識の継続性**: セッション間でのClineの記憶の継続性を確保
-- **チーム内共有**: チームメンバー間での知識共有や引き継ぎ
-- **意思決定の記録**: 重要な決定事項とその理由の記録
-- **進捗管理**: プロジェクトの進捗状況の可視化
-- **課題追跡**: 現在の課題と解決策の記録
+- **AWS デプロイ**: S3、CloudFront、ECR、ECSなどへのデプロイ
+- **Vercel デプロイ**: Vercelへのデプロイとプレビュー環境の自動作成
+- **Playwright テスト**: 複数ブラウザでの自動E2Eテスト実行
 
-メモリバンクを効果的に活用することで、Clineはより的確なサポートを提供し、プロジェクトの成功に貢献します。
+> **注意**: 現段階ではサンプル環境のため、これらのワークフローはそのままでは動作しません。実際のプロジェクトでは、アプリケーションコードを追加し、ワークフロー設定を調整する必要があります。
 
-## Docker連携
+### カスタマイズ方法
 
-このリポジトリには、サンプル的にDocker環境を構築するための基本的なファイルが含まれています。
+1. `.github/workflows/`内の各YAMLファイルを編集
+2. プロジェクトの要件に合わせてトリガー条件やジョブを調整
+3. 必要なシークレットをGitHubリポジトリに設定
+4. 実際のデプロイ先情報に更新
 
-### 含まれるファイル
+## その他の機能
 
-- `Dockerfile` - 基本的なNode.jsアプリケーション用のDockerfile
-- `docker/dev/Dockerfile` - 開発環境用のDockerfile
-- `docker/prod/Dockerfile` - 本番環境用のDockerfile
-- `docker-compose.yml` - アプリケーションとデータベースを連携するための設定
-- `.dockerignore` - Dockerビルド時に除外するファイルの設定
+### Docker環境
 
-### 使用方法
+開発と本番環境用のDockerファイルを提供しています。
 
-開発環境では `docker-compose up` コマンドで環境を起動できます。
+- **開発環境**: `docker-compose up`で簡単に起動
+- **本番環境**: 最適化されたDockerfileで効率的なデプロイ
 
-## Cline カスタムインストラクション
+### E2Eテスト
 
-`CustomInstructions` ディレクトリには、Clineのプランモードとアクトモードで使用するためのカスタムインストラクションファイルが含まれています。これらのファイルは、**ご自身のローカル環境のCline内におけるactCustomInstructionsとplanCustomInstructionsに設定（コピペ）する用のファイル**です。
+Playwrightを使用した自動テスト環境が含まれています。
 
-### PLANモード用カスタムインストラクション
+- **複数ブラウザ対応**: Chromium、Firefox、WebKitでのテスト
+- **モバイル対応**: レスポンシブデザインのテスト
+- **テストレポート**: 自動生成されるテストレポート
 
-[plan_custominstructions.md](./CustomInstructions/plan_custominstructions.md) には、PLANモードでClineを使用する際のガイドラインが含まれています：
+### 使用開始の流れ
 
-- 基本計画原則
-- ドメインモデリングアプローチ
-- アーキテクチャ設計ガイドライン
-- 計画プロセス（要件分析、ドメインモデリング、アーキテクチャ設計、詳細設計、実装計画）
-- コミュニケーションガイドライン
-- 計画ドキュメント形式
-
-### ACTモード用カスタムインストラクション
-
-[act_customInstructions.md](./CustomInstructions/act_customInstructions.md) には、ACTモードでClineを使用する際のガイドラインが含まれています：
-
-- 基本動作原則
-- 最重要ルール（**既存のコードを修正する場合既存のコードを省略しないこと**）
-- コード実装ルール
-- ファイル操作ルール
-- Gitコミットルール
-- コマンド実行ルール
-- テスト実行ルール
-- エラー対応ルール
-- 実行完了報告
-
-## 開発ルール
-
-`.clinerules` ディレクトリには、開発プロセスを標準化し、コードの品質を維持するためのルールが含まれています。
-
-### チーム開発ルール
-
-[team-development-rules.md](./.clinerules/team-development-rules.md) には以下の内容が含まれています：
-
-- Git ワークフローとブランチ戦略
-- コードレビュープロセス
-- チーム内コミュニケーション
-- 開発環境の統一
-- CI/CD パイプライン
-- 障害対応とインシデント管理
-- ドメイン駆動設計の原則
-- コーディング規約
-- テスト戦略
-- 継続的改善
-
-### コード品質ルール
-
-[code-quality-rules.md](./.clinerules/code-quality-rules.md) には以下の内容が含まれています：
-
-- コードスタイル（命名規則、フォーマット、コメント）
-- コード構造（ファイル構成、関数/メソッド、クラス/コンポーネント）
-- コード品質（エラー処理、非同期処理、パフォーマンス、セキュリティ）
-- テスト（ユニットテスト、統合テスト、E2Eテスト、テストの品質）
-- ツールと自動化（リンター、フォーマッター、型チェック、依存関係管理）
-
-### アーキテクチャルール
-
-[architecture-rules.md](./.clinerules/architecture-rules.md) には以下の内容が含まれています：
-
-- 全体アーキテクチャ（レイヤードアーキテクチャ、依存関係の方向）
-- フロントエンドアーキテクチャ（コンポーネント設計、状態管理、ルーティング）
-- バックエンドアーキテクチャ（API設計、データアクセス、ビジネスロジック）
-- クロスカッティングコンサーン（ロギング、エラーハンドリング、認証と認可、キャッシュ戦略）
-- マイクロサービスアーキテクチャ（該当する場合）
-- セキュリティアーキテクチャ
-- パフォーマンスとスケーラビリティ
-
-### Git操作ルール
-
-[git-operation-rules.md](./.clinerules/git-operation-rules.md) には以下の内容が含まれています：
-
-- 基本原則
-- 日常的なGit操作フロー
-- コンフリクト解決手順
-- リベースとマージの使い分け
-- タグ付けのルール
-- Gitフックの活用
-- 高度なGit操作
-- トラブルシューティング
-- セキュリティ対策
-- Git設定のベストプラクティス
-- チーム開発でのGit活用
-
-### MCPサーバー利用ルール
-
-[mcp-usage-rules.md](./.clinerules/mcp-usage-rules.md) には以下の内容が含まれています：
-
-- MCP (Model Context Protocol) の概要
-- MCPサーバーの設定と管理
-- GitHub MCPサーバーの利用
-- カスタムMCPサーバーの開発
-- セキュリティとプライバシー
-- トラブルシューティング
-- ベストプラクティス
-- 継続的な改善
-
-### 技術スタック選定ルール
-
-[tech-stack-selection-rules.md](./.clinerules/tech-stack-selection-rules.md) には以下の内容が含まれています：
-
-- 基本原則
-- 選定プロセス
-- ドキュメント化
-- 技術スタック変更の管理
-- 技術負債の管理
-- 新技術の評価と導入
-
-## GitHub MCP サーバー
-
-`mcp/github-server` ディレクトリには、GitHubのAPIを使用するためのMCPサーバーが含まれています。このサーバーを使用することで、Clineから直接GitHubのリポジトリ情報の取得やイシュー・プルリクエストの操作を行うことができます。
-
-### セットアップ手順
-
-1. `mcp/github-server` ディレクトリに移動します
-2. `.env.example` ファイルを `.env` にコピーします
-3. `.env` ファイルを編集して、`GITHUB_TOKEN` に自分のGitHubトークンを設定します
-   - トークンの取得方法は [GITHUB_TOKEN_GUIDE.md](./mcp/github-server/GITHUB_TOKEN_GUIDE.md) を参照してください
-4. 依存関係をインストールします
-   ```
-   npm install
-   ```
-5. TypeScriptをコンパイルします
-   ```
-   npm run build
-   ```
-6. Cline MCPの設定ファイルに以下の設定を追加します
-   ```json
-   "github.com/modelcontextprotocol/servers/tree/main/src/github": {
-     "autoApprove": [],
-     "disabled": false,
-     "timeout": 60,
-     "command": "node",
-     "args": [
-       "プロジェクトのパス/mcp/github-server/build/index.js"
-     ],
-     "transportType": "stdio"
-   }
-   ```
-
-詳細な使用方法については、[GitHub MCPサーバーのREADME](./mcp/github-server/README.md)を参照してください。
-
-## CI/CD ワークフロー
-
-`.github/workflows` ディレクトリには、継続的インテグレーション/継続的デリバリー（CI/CD）のためのGitHub Actionsワークフローが含まれています。以下の種類のワークフローが用意されています：
-
-1. **AWS デプロイ** - S3、CloudFront、ECR、ECSなどへのデプロイをサポート
-2. **Vercel デプロイ** - Vercelへのデプロイとプレビュー環境の自動作成をサポート
-3. **Playwright テスト** - 複数のブラウザでの自動E2Eテストを実行
-
-これらのワークフローは、コードの品質を確保し、デプロイプロセスを自動化するために設計されています。設定方法や詳細については、[GitHub設定の説明](./.github/GITHUB_ACTIONS.md)を参照してください。
-
-## E2E テスト
-
-`tests` ディレクトリには、[Playwright](https://playwright.dev/)を使用したE2Eテストが含まれています。これらのテストは、アプリケーションが実際のブラウザで正しく動作することを確認するために使用されます。
-
-主な特徴：
-
-- 複数のブラウザ（Chromium、Firefox、WebKit）でのテスト実行
-- モバイルビューポートのエミュレーション
-- APIテストのサポート
-- テストレポートの自動生成
-- GitHub Actionsとの統合
-
-テストの実行方法や詳細については、[Playwrightガイド](./tests/PLAYWRIGHT_GUIDE.md)を参照してください。
-
-> **注意**: 現段階では、このリポジトリにはテスト対象のアプリケーションコードが含まれていないため、GitHub Actionsのワークフローは失敗します。実際のプロジェクトでは、アプリケーションコードを追加し、必要に応じてテストとワークフロー設定を調整してください。サンプルテストは、実装予定の機能に基づいて作成されています。
-
-## 使用方法
-
-1. このリポジトリをクローンまたはフォークして、新しいプロジェクトの基盤として使用します。
-2. `.clinerules` ディレクトリ内のルールを確認し、必要に応じてプロジェクトの要件に合わせて調整します。
-3. `CustomInstructions` ディレクトリ内のファイルをClineのカスタムインストラクション設定にコピーします：
-   - `plan_custominstructions.md` の内容をClineのPLANモード用カスタムインストラクションにコピー
-   - `act_customInstructions.md` の内容をClineのACTモード用カスタムインストラクションにコピー
-4. チームメンバー全員がこれらのルールを理解し、遵守するようにします。
-5. 必要に応じて GitHub MCP サーバーをセットアップし、Cline から GitHub API を活用します。
-6. CI/CDワークフローを設定し、自動テストとデプロイを有効にします。
-7. Cline を使用して開発を進める際に、これらのルールに基づいてコードの品質とアーキテクチャの一貫性を維持します。
-
-## Cline との連携
-
-Cline は、これらのルールを理解し、開発プロセスをサポートします。以下のように活用できます：
-
-- コードレビューの支援
-- アーキテクチャの提案と検証
-- コード品質の改善提案
-- ドキュメント生成の支援
-- チーム内コミュニケーションの促進
-- GitHub APIを活用したリポジトリ管理の自動化
-- CI/CDパイプラインの最適化提案
+1. リポジトリをクローン/フォーク
+2. カスタムインストラクションを設定
+3. メモリバンクを初期化
+4. 必要に応じてMCPサーバーをセットアップ
+5. 開発ルールを確認・調整
+6. Clineと対話しながら開発を進行
 
 ## ライセンス
 
